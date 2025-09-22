@@ -37,7 +37,7 @@ int main(int argc, char ** argv){
         rc.name = "strided";
         for(auto run_id = 0U; run_id < conf.repeats; run_id++){
             event_counter.start();
-            auto res = scalar_strided_v2<data_t>(data, rc.real_data_amount, rc.stride);
+            auto res = scalar_strided<data_t>(data, rc.real_data_amount, rc.stride);
             event_counter.stop();
             res_printer.add_run_results(rc, event_counter.result(), res);
         }
@@ -45,7 +45,7 @@ int main(int argc, char ** argv){
         rc.name = "strided unrolled";
         for(auto run_id = 0U; run_id < conf.repeats; run_id++){
             event_counter.start();
-            auto res = scalar_lanes_codegen_v2<data_t>(data, rc.real_data_amount, rc.lane_count);
+            auto res = scalar_unrolled_codegen<data_t>(data, rc.real_data_amount, rc.lane_count);
             event_counter.stop();
             res_printer.add_run_results(rc, event_counter.result(), res);
         }

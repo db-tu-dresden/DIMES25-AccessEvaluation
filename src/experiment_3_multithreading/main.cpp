@@ -74,9 +74,6 @@ void benchmark(config::benchmark_config conf){
         time_nano[run_id] = timeing::time_microseconds(a, b);
 
         check_sum +=  res;
-        // check_sum = (check_sum << 13) ^ res;
-        // check_sum = (check_sum >> 17) ^ check_sum;
-        // check_sum = (check_sum << 5) ^ check_sum;
     };
 
     auto write_benchmark_result = [&](size_t vector_element_count, bool uses_simd = false){
@@ -100,7 +97,6 @@ void benchmark(config::benchmark_config conf){
             total_time += time_nano[i];
         }
         total_time /= conf.repeats;
-        // check_sum &= 0x3FFFFFF;
         std::cout << " " ;
         if(total_time != 0){
             std::cout   << std::right << std::setw(5) << vector_element_count << " "

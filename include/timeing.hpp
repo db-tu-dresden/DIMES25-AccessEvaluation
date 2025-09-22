@@ -1,5 +1,4 @@
-#ifndef TUD_DDRG_TIMEING_HPP
-#define TUD_DDRG_TIMEING_HPP
+#pragma once
 #include <chrono>
 #include <stdlib.h>
 #include <sstream>
@@ -113,7 +112,6 @@ namespace timeing{
         return throughput<T>(time, t_exp, element_count, 0);
     }
 
-
     std::string throughput_string(double throughput){
         int8_t d_exp = 0;
         while(throughput >= 1024.){
@@ -218,4 +216,3 @@ namespace timeing{
         return res.str();
     }
 }
-#endif
