@@ -1,1 +1,1 @@
-numactl -m 0 -N 0 ./experiment_multithreading -mib 256 --repeats 5 --file 1_gib.csv;
+numactl -m 0 -N 0 ./experiment_multithreading -gib 1 --repeats 5 --file 1_gib.csv;
