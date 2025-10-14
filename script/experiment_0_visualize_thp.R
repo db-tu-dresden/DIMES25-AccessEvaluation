@@ -1,7 +1,7 @@
 source("script/general.R")
-main_path <- "results/experiment_05paper/"
+main_path <- "results/experiment_fixed_data_size/"
 filetype <- "csv"
-l_tex <- TRUE
+l_tex <- FALSE
 
 color_value2 <- function(label){
     # https://davidmathlogic.com/colorblind/#%237CAE00-%23D05A52-%2300BFC4-%239F2FBB-%23374A52
@@ -10,7 +10,6 @@ color_value2 <- function(label){
     return(my_colors)
 }
 
-
 paper_plot_special <- function(plot_data, filename, x_info, y_info, group_info, ld = FALSE, log_scale = FALSE, v_line_at = -1, max_val = 10000, dimensions = c(5.3, 2.2), rects = list(), tex = TRUE, multi_line = FALSE){
     if(tex){
         tikz(paste(filename,"tex", sep = "."), width = dimensions[1], height = dimensions[2])
@@ -18,9 +17,7 @@ paper_plot_special <- function(plot_data, filename, x_info, y_info, group_info, 
     if(ld){
         plot_data$x_axis <- log(plot_data$x_axis, 2)
     }
-    # print(paste(group_info$color, names(group_info$color)))
-    # print(unique(plot_data$print_name))
-    # print(y_info$axis$breaks + 1)
+
     x_limits = c(fmin(plot_data$x_axis), fmax(plot_data$x_axis))
     p <- ggplot() +
         geom_line(data = plot_data[plot_data$print_name %!in% c("strided", "strided with hugepages"),], aes(x = x_axis, y = y_axis, group = print_name, color = print_name), linewidth = 1)+
@@ -124,45 +121,35 @@ plot_stride <- function(agg_data, to_summarise, color_info, current_path = "", p
 
 section2 <- function(agg_data, to_summarise, color_info){
     agg_data <- agg_data[agg_data$algorithm != "strided unrolled",]
-    path <- "combination/"
+    path <- "thp_combination/"
     make_dir(path)
     plot_stride(agg_data, to_summarise, current_path = path, color_info = color_info, plot_wh = c(6, 2.2))
 }
 
 setwd(main_path)
 
-raw_filename <- "1_gib_local_DRAM_this"
-raw_thp_filename <- "thp_1_gib_local_DRAM_3"    
+#if you want to change the files used in this visualisation please edit these two filenames
+raw_filename <- "1_gib"
+raw_thp_filename <- "1_gib_thp"    
 
 raw_data <- fread(paste(raw_filename, filetype, sep = "."), data.table=FALSE)
 raw_thp_data <- fread(paste(raw_thp_filename, filetype, sep = "."), data.table=FALSE)
 
-print(raw_data[1:10,])
-print(raw_thp_data[1:10,])
-
+cat(paste("experiment transparent hugepages combination took: ", get_time_string(fsum(raw_data$time_ns) + fsum(raw_thp_data$time_ns)), "\n"))
 
 raw_data <- raw_data[,which(colnames(raw_data) %in% colnames(raw_thp_data))]
 raw_thp_data <- raw_thp_data[raw_thp_data$algorithm == "strided",which(colnames(raw_thp_data) %in% colnames(raw_data))]
 raw_thp_data$algorithm <- "strided with hugepages"
 
-print(raw_data[1:10,])
-print(raw_thp_data[1:10,])
-
 raw_data <- rbind(raw_data, raw_thp_data)
-#todo
 
-cat(paste(" ", get_time_string(fsum(raw_data$time_ns)), "\t"))
+
 to_summarise <- get_aggregation_labels(raw_data)
 
 for(metric in to_summarise){
     if(metric == "cycles"){
         colnames(raw_data)[which(colnames(raw_data) == "cycles")] <- "Cycles"
     }
-    # todo .. this needs to be done for every counter that has an unsightly name
-    # IMPORTANT don't change the name of gibs. it is a reference point AND gets changed later on anyways.
-    # FOR changeing the name in plots see get_y_label in general.R
-    # for an even better label this can also be used.
-    # please be aware that r is a bitch and doesn't let me escape _ for latex so at one point i just replace it with -
 }
 
 to_summarise <- get_aggregation_labels(raw_data)
@@ -174,3 +161,4 @@ color_info <- color_value2(agg_data$algorithm)
 section2(agg_data, to_summarise, color_info)
 # write_success(raw_filename)
 
+cat("\n")

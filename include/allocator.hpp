@@ -25,18 +25,27 @@ enum FillType{
 };
 
 template<typename T> 
-void print_page_info(T *array, size_t length) {
+void print_page_info(T *array, size_t length, bool madvised = false){
     constexpr int KPF_THP = 22;
     page_info_array pinfo = get_info_for_range(array, array + length);
     flag_count thp_count = get_flag_count(pinfo, KPF_THP);
     if (thp_count.pages_available) {
-        std::cout << "\033[32m";
+        bool error = false;
+        if(100.0 *thp_count.pages_set / thp_count.pages_total < 50. && madvised){
+            std::cout << "\033[31m";
+            error = true;
+        }else{
+            std::cout << "\033[32m";
+        }
         std::cout << "Source pages allocated with transparent hugepages: " 
             << 100.0 * thp_count.pages_set / thp_count.pages_total 
             << "% (" << thp_count.pages_total 
             << " pages, " << 100.0 * thp_count.pages_available / thp_count.pages_total
-            << "% flagged)\n" << std::endl;
-        std::cout << "\033[0m" << std::flush;
+            << "% flagged)" << std::endl;
+        if(error){
+            std::cout << "\033[31;1mAre transparent hugepages enabled?" << std::endl;
+        }
+        std::cout << "\033[0m" << std::endl;
     } else {
         std::cout << "\033[31mCouldn't determine hugepage info \033[31;1m(you are probably not running as root)\033[0m" << std::endl;
     }
@@ -67,7 +76,6 @@ public:
         if(_ptype == Transparent_HugePages){
             madvise(data, size, MADV_HUGEPAGE);
         }
-
         return data;
     }
 
@@ -85,7 +93,7 @@ public:
         }
 
         if(inform){
-            print_page_info<T>(data, count);
+            print_page_info<T>(data, count, _ptype == Transparent_HugePages);
         }
     }
 

@@ -1,6 +1,7 @@
 source("script/general.R")
 main_path <- "results/experiment_fixed_data_size/"
 filetype <- "csv"
+l_tex <- FALSE
 
 rects <- list(
     list(xmin = 1000, xmax = 4096, xk = 0.1, yk = 0.15, text = "1", algs = c("strided")), 
@@ -217,15 +218,13 @@ all_plot_file_data <- get_all_new_files(main_path, filetype, ignore_already_plot
 if(length(all_plot_file_data) == 0){
     cat(paste("No (new) csv file found in ", main_path, "  Skipping...", "\n", sep=""))
 }else{
-    cat(paste("New Files found in ", main_path, " Plotting:\n", sep = ""))
+    cat(paste("experiment_fixed_data_size new files found in ", main_path, " plotting:\t", sep = ""))
     setwd(main_path)
-    
-    cat(paste("\tPlotting Default Information\n"))
     for(file_data in all_plot_file_data){
         cat(paste(file_data$filename, filetype, sep = "."))
         
         raw_data <- fread(paste(file_data$filename, filetype, sep = "."), data.table=FALSE)
-        cat(paste(" ", get_time_string(fsum(raw_data$time_ns)), "\t"))
+        cat(paste(" took ", get_time_string(fsum(raw_data$time_ns)), ", \t", sep = ""))
         to_summarise <- get_aggregation_labels(raw_data)
 
         for(metric in to_summarise){
@@ -243,7 +242,7 @@ if(length(all_plot_file_data) == 0){
         section2(agg_data, to_summarise, file_data, color_info)
         section3(agg_data, to_summarise, file_data, color_info)
         write_success(file_data)
-        # q()
     }
 
+    cat("\n\n")
 }

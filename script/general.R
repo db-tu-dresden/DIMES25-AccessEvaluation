@@ -102,6 +102,15 @@ get_time_string <- function(time_ns){
     m <- floor(time / 60)
     time = time - m * 60
     s <- floor(time)
+    if(h < 10){
+        h <- paste("0", h, sep = "")
+    }
+    if(m < 10){
+        m <- paste("0", m, sep = "")
+    }
+    if(s < 10){
+        s <- paste("0", s, sep = "")
+    }
     time_string <- paste(time_string, paste(h,m,s, sep=":"))
     return (time_string)   
 }

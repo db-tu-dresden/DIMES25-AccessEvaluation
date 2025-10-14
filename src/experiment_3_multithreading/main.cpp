@@ -71,7 +71,7 @@ void benchmark(config::benchmark_config conf){
     size_t check_sum = 0;
 
     auto get_time = [&](){
-        time_nano[run_id] = timeing::time_microseconds(a, b);
+        time_nano[run_id] = timeing::time_nanoseconds(a, b);
 
         check_sum +=  res;
     };
@@ -91,7 +91,7 @@ void benchmark(config::benchmark_config conf){
                     vector_element_count * sizeof(data_t) * uses_simd,
                     tc,
                     time_nano[i],
-                    timeing::gibs<data_t>(time_nano[i], -2, data_amount * tc)
+                    timeing::gibs<data_t>(time_nano[i], -3, data_amount * tc)
                 )
             );
             total_time += time_nano[i];
@@ -103,13 +103,13 @@ void benchmark(config::benchmark_config conf){
                         << std::left << std::setw(23) << name
                         << std::right << std::setw(10) << "check: "
                         << std::left << std::setw(10) << check_sum 
-                        << std::right << std::setw(8) << timeing::time_string(total_time, -2) 
-                        << std::setw(15) << timeing::throughput_string(timeing::bs<data_t>(total_time, -2, data_amount * tc));    
+                        << std::right << std::setw(8) << timeing::time_string(total_time, -3) 
+                        << std::setw(15) << timeing::throughput_string(timeing::bs<data_t>(total_time, -3, data_amount * tc));    
         }else{
             std::cout   << std::left << std::setw(23) << name
                         << std::right << std::setw(10) << "check: "
                         << std::left << std::setw(10) << check_sum 
-                        << std::right << std::setw(8) << timeing::time_string(total_time, -2) 
+                        << std::right << std::setw(8) << timeing::time_string(total_time, -3) 
                         << std::setw(15) << "inf";
         }
         if(stride != 0){

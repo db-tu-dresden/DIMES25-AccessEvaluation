@@ -1,6 +1,8 @@
 source("script/general.R")
 main_path <- "results/experiment_fixed_stride_size/"
 filetype <- "csv"
+l_tex <- FALSE
+
 
 plot_partitions <- function(agg_data, to_summarise, file_data, current_path, plot_wh = c(5.3, 2.2), x_axis_ticks = 0){    
     if(x_axis_ticks == 0){
@@ -48,6 +50,7 @@ for(i in seq(2, length(files), 1)){
 
     raw_data <- rbind(raw_data, next_raw)
 }
+cat(paste("experiment_fixed_stride_stride_size took: ", get_time_string(fsum(raw_data$time_ns)), "\n"))
 
 to_summarise <- get_aggregation_labels(raw_data)
 
@@ -69,10 +72,11 @@ for(alg in all_algs){
         fits <- fits[1:3,]
         best <- rbind(best, fits)
     }
-    cat("Top results per stride size\n")
-    print(best)
-    cat("\n")
+    # cat("Top results per stride size\n")
+    # print(best)
+    # cat("\n")
     
     color_info <- color_value(work_data$algorithm)
     plot_partitions(work_data, to_summarise, color_info, path, plot_wh = c(3.6,1.9))
 }
+cat("\n")

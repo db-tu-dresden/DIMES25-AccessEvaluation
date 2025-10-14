@@ -1,8 +1,9 @@
 source("script/general.R")
+l_tex <- FALSE
 
 print_best <- function(data, name = "strided"){
     result <- data[0,]
-    print(data[1,])
+    
     for(i in unique(data$thread_count)){
         sub <- data[data$thread_count == i,]
         a <- sub[sub$algorithm %!in% c(name),]
@@ -24,14 +25,14 @@ all_plot_file_data <- get_all_new_files(main_path, filetype, ignore_already_plot
 if(length(all_plot_file_data) == 0){
     cat(paste("No (new) csv file found in ", main_path, "  Skipping...", "\n", sep=""))
 }else{
-    cat(paste("New Files found in ", main_path, " Plotting:\t", sep = ""))
+    cat(paste("experiment_fixed_data_size new files found in ", main_path, " plotting:\t", sep = ""))
     setwd(main_path)
     for(file_data in all_plot_file_data){
         cat(paste(paste(file_data$filename, filetype, sep = "."), "\t"))
         raw_data <- fread(paste(file_data$filename, filetype, sep = "."), data.table=FALSE)
 
+        cat(paste(" took ", get_time_string(fsum(raw_data$time_ns)), ", \t", sep = ""))
         to_summarise <- get_aggregation_labels(raw_data)
-
         raw_data$data_amount <- raw_data$data_amount / raw_data$thread_count # Using data amount as data per thread!!!
 
         agg_data <- raw_data %>% fgroup_by(algorithm, data_amount, byte_count, thread_count, vector_element_count) %>% fmedian()
@@ -58,7 +59,7 @@ if(length(all_plot_file_data) == 0){
             if(option == "gibs"){ y_label <- "GiB / s"}
 
             y_axis <- get_breaks(c(fmin(plot_data$y_axis), fmax(plot_data$y_axis)),6, start_at_zero = TRUE, add_min_value = FALSE)
-            print(y_axis)
+
             lt_values <- linetype_value(plot_data$print_name, simple_line_labels)
             paper_plot(plot_data, paste(file_data$filename, option, sep="/"), 
                 list(label = x_label, axis = x_axis),
@@ -69,5 +70,5 @@ if(length(all_plot_file_data) == 0){
         }
         write_success(file_data)
     }
-    cat("\n")
+    cat("\n\n")
 }

@@ -1,6 +1,7 @@
 source("script/general.R")
 main_path <- "results/experiment_fixed_partition_count/"
 filetype <- "csv"
+l_tex <- FALSE
 
 plot_stride <- function(agg_data, to_summarise, color_info, current_path = "", plot_wh = c(5.3, 2.2), x_axis_ticks = 0){
  
@@ -28,7 +29,6 @@ plot_stride <- function(agg_data, to_summarise, color_info, current_path = "", p
             list(label = x_label, axis = x_axis),
             list(label = y_label, axis = y_axis),
             list(label = "No. of Partitions", color = color_info), 
-            log_scale = TRUE,
             dimensions = plot_wh, tex=l_tex
         )
     }
@@ -48,7 +48,7 @@ for(i in seq(2, length(files), 1)){
 
     raw_data <- rbind(raw_data, next_raw)
 }   
-
+cat(paste("experiment_fixed_partition_count took: ", get_time_string(fsum(raw_data$time_ns)), "\n"))
 to_summarise <- get_aggregation_labels(raw_data)
 
 agg_data <- raw_data %>% fgroup_by(algorithm, data_amount, real_data_amount, byte_count, stride, lane_count) %>% fmedian()
@@ -59,7 +59,8 @@ for(alg in all_algs){
     make_dir(alg)
     work_data <- agg_data[agg_data$algorithm == alg,] 
     work_data$algorithm <- as.factor(work_data$lane_count)
-    print(work_data)
+
     color_info <- color_value(work_data$algorithm)
     plot_stride(work_data, to_summarise, color_info, paste(alg, "", sep = "/"), plot_wh = c(3.6, 1.9))
 }
+cat("\n")
