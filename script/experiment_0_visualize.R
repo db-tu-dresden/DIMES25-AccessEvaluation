@@ -80,7 +80,7 @@ plot_partitions <- function(
 ){
     
     agg_data$x_axis <- agg_data$real_data_amount * 1.0 / agg_data$stride
-    agg_data <- agg_data[agg_data$x_axis >= limits[1] & agg_data$x_axis <= limits[2],]
+    agg_data <- agg_data[agg_data$x_axis >= limits[1] & agg_data$x_axis < limits[2] + 1,]
     if(nrow(agg_data)>1){
         if(x_axis_ticks == 0){
             x_axis_ticks = number_x_axis_ticks
@@ -243,6 +243,7 @@ if(length(all_plot_file_data) == 0){
         section2(agg_data, to_summarise, file_data, color_info)
         section3(agg_data, to_summarise, file_data, color_info)
         write_success(file_data)
+        # q()
     }
-    # cat("\n")
+
 }

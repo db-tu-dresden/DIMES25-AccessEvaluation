@@ -13,6 +13,8 @@ namespace config{
             std::cout << std::endl << "\033[1mBENCHMARK SPECIFIC OPTIONS\033[22m" << std::endl; 
             std::cout << std::left << " " << std::setw(o1) << "-p" << " " << std::setw(o2) << "--partition"
                 << "Give the maximum partition count" << std::endl;
+            std::cout << std::left << " " << std::setw(o1) << "-tc" << " " << std::setw(o2) << "--thread_count"
+                << "Give the maximum thread count" << std::endl;
         }
     }
 

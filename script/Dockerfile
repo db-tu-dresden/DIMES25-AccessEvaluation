@@ -3,8 +3,6 @@ FROM ubuntu:latest
 WORKDIR /visualize
  
 RUN apt-get update && apt-get install -y \
-        g++ \
-        cmake \
         r-base \
         r-base-dev \
         texlive \ 

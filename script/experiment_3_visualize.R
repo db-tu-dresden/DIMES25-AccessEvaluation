@@ -57,7 +57,8 @@ if(length(all_plot_file_data) == 0){
             y_label <- option 
             if(option == "gibs"){ y_label <- "GiB / s"}
 
-            y_axis <- get_breaks(c(10, 60),6, start_at_zero = TRUE)
+            y_axis <- get_breaks(c(fmin(plot_data$y_axis), fmax(plot_data$y_axis)),6, start_at_zero = TRUE, add_min_value = FALSE)
+            print(y_axis)
             lt_values <- linetype_value(plot_data$print_name, simple_line_labels)
             paper_plot(plot_data, paste(file_data$filename, option, sep="/"), 
                 list(label = x_label, axis = x_axis),

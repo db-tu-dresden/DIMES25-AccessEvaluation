@@ -170,7 +170,7 @@ get_y_label <- function(metric){
     # return("Counter Values")
 }
 
-get_breaks <- function(values, ticks, power_two = FALSE, start_at_zero = TRUE, ld_ticks = FALSE){
+get_breaks <- function(values, ticks, power_two = FALSE, start_at_zero = TRUE, ld_ticks = FALSE, add_min_value = TRUE){
   if(ld_ticks){
     values <- log(values, 2)
   }
@@ -222,8 +222,15 @@ get_breaks <- function(values, ticks, power_two = FALSE, start_at_zero = TRUE, l
   breaks <- c(0)
   minor_breaks <- c(0)
   if(start_at_zero){
-    breaks <- unique(c(seq(0, e_max_val + break_stepsize, break_stepsize), e_min_val))
-    minor_breaks <- unique(c(seq(0, e_max_val + minor_breaks_stepsize, minor_breaks_stepsize), e_min_val))
+    breaks <- unique(c(seq(0, e_max_val + break_stepsize, break_stepsize)))
+    minor_breaks <- unique(c(seq(0, e_max_val + minor_breaks_stepsize, minor_breaks_stepsize)))
+    if(add_min_value){
+        breaks <- unique(c(e_min_val, breaks))
+        minor_breaks <- unique(c(e_min_val, minor_breaks, breaks))
+    }else{
+        add_helper <- abs(minor_breaks - e_min_val)
+        breaks <- unique(c(minor_breaks[which(add_helper == min(add_helper))],breaks))
+    }
   }else{
     breaks <- unique(seq(e_min_val, e_max_val + break_stepsize, break_stepsize))
     minor_breaks <- unique(seq(e_min_val, e_max_val + minor_breaks_stepsize, minor_breaks_stepsize))
@@ -519,7 +526,7 @@ paper_plot <- function(
         plot_data$x_axis <- log(plot_data$x_axis, 2)
     }
     if(y_limits[1] < 0 | y_limits[2] < 0){
-        y_limits = c(fmin(plot_data$y_axis), fmax(plot_data$y_axis))
+        y_limits = c(floor(fmin(plot_data$y_axis) * 0.95), ceiling(fmax(plot_data$y_axis) * 1.05))
     }
     # print(paste(group_info$color, names(group_info$color)))
     # print(unique(plot_data$print_name))
