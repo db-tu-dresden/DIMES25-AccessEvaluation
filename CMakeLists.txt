@@ -82,7 +82,7 @@ endforeach()
 #####################################
 #   Custom Commands                #
 #####################################
-add_custom_target(build-docker sh script/build_docker.sh)
+add_custom_target(docker sh script/build_docker.sh)
 add_custom_target(plots sh script/plot_all.sh)
 if(UNIX)
     add_custom_target(perf-list ALL

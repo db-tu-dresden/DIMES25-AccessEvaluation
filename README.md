@@ -40,7 +40,7 @@ All the available options for the benchmarks can be read out with: ```./<benchma
 Additionally the ```script/``` directory includes multiple ```run_experiment_*.sh``` scripts to run the given benchmarks with a default configuration. 
 
 The benchmark results can be plotted using ```make plots``` the R script files or the ```plot_experiment_*.sh``` scripts found in ```script/```. 
-To use the ```make plots``` or ```plot_experiment_*.sh``` files you first need to build the docker container using ```./script/build_docker.sh``` or ```make build-docker```.
+To use the ```make plots``` or ```plot_experiment_*.sh``` files you first need to build the docker container using ```./script/build_docker.sh``` or ```make docker```.
 
 To use the R scripts directly you have to have RScript and the following R packages installed: ```magrittr```, ```dplyr```, ```ggplot2```, ```data.table```, ```collapse```, ```latex2exp```, ```tikzDevice```
 
