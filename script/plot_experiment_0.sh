@@ -1,0 +1,2 @@
+docker run -v "$PWD":/visualize/ -it --rm dimes2025_strided Rscript script/experiment_0_visualize.R
+docker run -v "$PWD":/visualize/ -it --rm dimes2025_strided Rscript script/experiment_0_visualize_thp.R

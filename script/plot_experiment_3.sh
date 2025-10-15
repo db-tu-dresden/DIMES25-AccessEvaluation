@@ -1,0 +1,1 @@
+docker run -v "$PWD":/visualize/ -it --rm dimes2025_strided Rscript script/experiment_3_visualize.R
